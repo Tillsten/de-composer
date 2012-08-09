@@ -8,8 +8,10 @@ import numpy as np
 from numpy.linalg import lstsq, norm
 from scipy.linalg import svd, hankel
 
-from math import exp, sin, cos, pi, atan2
-from cmath import polar
+from math import exp, sin, cos, atan2
+from cmath import polar, pi
+
+import decomposition as d
 
 class LPSVD:
     """Encapsulates the logic needed to perform Linear-Prediction Singular
@@ -19,10 +21,13 @@ class LPSVD:
         """Initializes with array-like time-series argument data."""
         self.data = np.array(data)
         self.count = count
+        self.counter = counter
         self.svd = None
     
     def decomposition(self):
-        pass
+        comps, bias = self.components()
+        decomp = d.Decomposition(comps, bias)
+        return decomp
     
     def components(self):
         """Compute components. Collect into single spec tuples."""
@@ -65,14 +70,15 @@ class LPSVD:
                 row.append(exp(-1*d*t)*cos(f*2*pi*t))
             else:
                 row.append(1) # bias
-        A = np.array([r[1] for r in rows])
+        A = np.array([r[1] for r in trows])
         v = lstsq(A,b)[0]
         return v
     
     def half_components(self):
         """Yields decay coefficients and frequencies for components."""
         roots = self.half_component_roots()
-        froots = filter(lambda c: polar(c)[0] >= 1.0 and c.imag >= 0, roots)
+        froots = filter(lambda c: polar(c)[0] >= 1.0, roots)
+        froots = filter(lambda c: c.imag >= 0, froots)
         decays = [np.log(polar(c)[0]) for c in froots]
         freqs = [polar(c)[1] / (2*pi) for c in froots]
         return zip(decays, freqs)
@@ -96,6 +102,7 @@ class LPSVD:
         n = self.get_signal_count(s)
         
         invs = 1.0/self.bias_filter(s,n)
+        
         invSig = np.diag(invs[:n])
         a = np.dot(Vh.T[:,:n],
                    np.dot(invSig,
@@ -104,13 +111,13 @@ class LPSVD:
                    )
         return a
     
-    def bias_filter(self, count):
+    def bias_filter(self, data, count):
         """Subtract arithmetic mean of noise-related singular values from
            the singular value vector. Bias correction procedure."""
-        signals = self.data[:count]
-        remains = self.data[count:]
+        signals = data[:count]
+        remains = data[count:]
         bias = np.average(remains)
-        return (signals - bias)
+        return signals - bias
     
     def get_signal_count(self, values):
         """Prioritizes signal counting techniques: defers to an imposed
