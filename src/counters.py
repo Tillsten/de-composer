@@ -9,8 +9,8 @@ class Counter():
        for identifying signal vs. noise singular values."""
     pass
 
-class NaiveCounter(Counter):
-    """Accepts a simple fraction of the singular values."""
+class MassFractionCounter(Counter):
+    """Accepts a simple mass fraction of the singular values."""
     def __init__(self, fraction):
         """Initializes with a mass fraction of singular values to accept."""
         self.fraction = fraction

@@ -13,10 +13,10 @@ import random
 from math import ceil
 import counters as c
 
-class NaiveCounterSpec(unittest.TestCase):
+class MassFractionCounterSpec(unittest.TestCase):
     def setUp(self):
         self.fraction = frac = random.random()
-        self.case = c.NaiveCounter(frac)
+        self.case = c.MassFractionCounter(frac)
     
     def test_initialization(self):
         self.assertTrue(isinstance(self.case, c.Counter))
