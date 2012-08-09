@@ -13,35 +13,27 @@ class Decomposition():
        data series based on their components."""
     
     def __init__(self, specs, bias=0.0):
-        """Initializes a decomposition object."""
-        self._bias = bias
+        """Initializes a decomposition object. Demeter: save copies of 
+           component elements for wrapper-level querying."""
         self._components = []
+        
+        self.bias = bias
+        self.specs = specs
         for spec in specs:
             # For historical reasons, given as: (amp, decay, freq, phase)
             amp, decay, freq, ph = spec
             self._components.append(c.Component(amp, decay, freq, phase=ph))
-    
-    def get_frequencies(self):
-        return [c.freq for c in self._components]
-    
-    def get_amplitudes(self):
-        return [c.amp for c in self._components]
-    
-    def get_decays(self):
-        return [c.decay for c in self._components]
-    
-    def get_periods(self):
-        return [c.period for c in self._components]
-    
-    def get_phases(self):
-        return [c.phase for c in self._components]
-    
-    def get_offsets(self):
-        return [c.phase for c in self._components]
+        
+        self.freqs = [comp.freq for comp in self._components]
+        self.amps = [comp.amp for comp in self._components]
+        self.decays = [comp.decay for comp in self._components]
+        self.periods = [comp.period for comp in self._components]
+        self.phases = [comp.phase for comp in self._components]
+        self.offsets = [comp.phase for comp in self._components]
     
     def time_series(self, length):
         """Builds a recomposed time series based on all components."""
-        maker = r.Recomposer(self._components, self._bias)
+        maker = r.Recomposer(self._components, self.bias)
         return maker.time_series(length)
     
     def filtered_time_series(self, length, n, should_reverse=False):
@@ -55,14 +47,14 @@ class Decomposition():
             filtered = sorts[:n]
         else:
             raise Exception("Please argue n as integer or slice tuple!")
-        maker = r.Recomposer(filtered, self._bias)
+        maker = r.Recomposer(filtered, self.bias)
         return maker.time_series(length)
     
     def count(self):
         """Returns the number of components in the decomposition"""
         return len(self._components)
     
-    def make_summary(self):
+    def summary(self):
         """Returns a concise summary of decomposition components."""
         return [c.to_tuple() for c in self._components]
         

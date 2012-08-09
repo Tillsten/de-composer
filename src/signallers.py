@@ -62,7 +62,7 @@ class Periodic:
         damp = e ** (-1 * alpha * time)
         signal = cos(2 * pi * f * (time - offset))
         noise = self.noise * random.gauss(0.0, 1.0)
-        return a * (damp * signal + noise)
+        return a * damp * (signal + noise)
     
 class Gaussian:
     """Generates gaussian noise time-series."""

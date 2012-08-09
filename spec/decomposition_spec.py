@@ -37,25 +37,20 @@ class DecompositionSpec(unittest.TestCase):
             self.assertEqual(a, b)
     
     def test_frequencies(self):
-        self._test_attribute_fidelity(self.t_freqs,
-                                      self.case.get_frequencies())
+        self._test_attribute_fidelity(self.t_freqs, self.case.freqs)
     
     def test_amplitudes(self):
-        self._test_attribute_fidelity(self.t_amps,
-                                      self.case.get_amplitudes())
+        self._test_attribute_fidelity(self.t_amps, self.case.amps)
     
     def test_decays(self):
-        self._test_attribute_fidelity(self.t_decays,
-                                      self.case.get_decays())
+        self._test_attribute_fidelity(self.t_decays, self.case.decays)
     
     def test_periods(self):
         periods = [1.0/f for f in self.t_freqs]
-        self._test_attribute_fidelity(periods,
-                                      self.case.get_periods())
+        self._test_attribute_fidelity(periods, self.case.periods)
     
     def test_phases(self):
-        self._test_attribute_fidelity(self.t_phases,
-                                      self.case.get_phases())
+        self._test_attribute_fidelity(self.t_phases, self.case.phases)
     
     def test_time_series(self):
         length = random.randint(10,150)
@@ -95,7 +90,7 @@ class DecompositionSpec(unittest.TestCase):
         self.assertEqual(self.t_n, self.case.count())
     
     def test_summary(self):
-        summary = self.case.make_summary()
+        summary = self.case.summary()
         self.assertEqual(self.t_n, len(summary))
         for t in summary:
             self.assertTrue(isinstance(t, tuple))

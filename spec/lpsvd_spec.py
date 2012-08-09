@@ -15,19 +15,18 @@ import lpsvd as l
 
 class LPSVD_Acceptance_Tests(unittest.TestCase):
     def setUp(self):
-       self.specs = specs = [(10.0, 0.05, 1.0/20.0, 12.0),
-                             (5.0, 0.35, 1.0/45.0, 3.0)]
+       self.specs = specs = [(5.0, 0.35, 1.0/45.0, 3.0),
+                             (10.0, 0.05, 1.0/20.0, 12.0)]
        self.series = data = s.Periodic(specs, noise=0.0).time_series(100)
        self.case = l.LPSVD(data, count=4.0)
     
     def test_LPSVD(self):
         decomp = self.case.decomposition()
         self.assertEqual(len(self.specs), decomp.count())
-        for exp,comp in zip(self.specs[0], decomp.make_summary()[1]):
-            self.assertTrue(abs(exp - comp) <= 0.001)
-        for exp,comp in zip(self.specs[1], decomp.make_summary()[0]):
-            self.assertTrue(abs(exp - comp) <= 0.001)
-
+        for pair in zip(self.specs, decomp.summary()):
+            for exp,comp in zip(pair[0], pair[1]):
+                self.assertTrue(abs(exp - comp) <= 0.001)
+    
 class LPSVD_LinearFitSpec(unittest.TestCase):
     def setUp(self):
         pass
