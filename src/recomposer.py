@@ -36,11 +36,12 @@ class Recomposer:
         return sum(signals)
     
     def _calculate_spec_at(self, spec, time):
-        a,alpha,f,offset = spec.to_tuple()
-        
-        damp = e ** (-1*alpha*time)
-        signal = cos(2*pi*f * (time - offset))
-        return a * (damp * signal)
+        # a,alpha,f,offset = spec.to_tuple()
+        #
+        # damp = e ** (-1*alpha*time)
+        # signal = cos(2*pi*f * (time - offset))
+        # return a * (damp * signal)
+        return spec.value(time)
 
 if __name__ == '__main__':
     print "This is a module for regenerating sinusoidal time series."

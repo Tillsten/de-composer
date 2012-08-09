@@ -122,7 +122,7 @@ class LPSVD:
         elif self.counter != None:
             count = self.counter.count_signals(values)
         else:
-            count = self._count_signals(values):
+            count = self._count_signals(values)
         return count
     
     def _count_signals(self, values):
