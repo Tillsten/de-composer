@@ -14,7 +14,37 @@ import signallers as s
 
 class PeriodicSpec(unittest.TestCase):
     def setUp(self):
-        pass
+        self.specs = [(10.0, 0.0, 1.0/20.0, 0.0)]
+        self.count = n = random.randint(1,10)
+        
+        self.scase = s.Periodic(self.specs, noise=0.0)
+        self.ncase = s.Periodic(count=n, noise=0.0)
+    
+    def test_initialization(self):
+        self.assertTrue(isinstance(self.scase, s.Periodic))
+        self.assertTrue(isinstance(self.ncase, s.Periodic))
+        self.assertEqual(self.specs, self.scase.specs)
+        self.assertEqual(len(self.ncase.specs), self.count)
+    
+    def test_spec_case(self):
+        n = random.randint(100,750)
+        series = self.scase.time_series(n)
+        
+        self.assertEqual(len(series), n)
+        max_amp = sum(map(abs, [s[0] for s in self.specs]))
+        for v in series:
+            self.assertTrue(v <= max_amp)
+            self.assertTrue(v >= -1 * max_amp)
+    
+    def test_count_case(self):
+        n = random.randint(100,750)
+        series = self.ncase.time_series(n)
+        
+        self.assertEqual(len(series), n)
+        max_amp = sum(map(abs, [s[0] for s in self.ncase.specs]))
+        for v in series:
+            self.assertTrue(v <= max_amp)
+            self.assertTrue(v >= -1 * max_amp)
     
     def tearDown(self):
         pass
@@ -35,8 +65,8 @@ class GaussianSpec(unittest.TestCase):
         series = self.case.time_series(n)
         self.assertEqual(len(series), n)
         for v in series:
-            self.assertTrue(v <= self.mean + 4*self.stdev)
-            self.assertTrue(v >= self.mean - 4*self.stdev)
+            self.assertTrue(v <= self.mean + 10*self.stdev)
+            self.assertTrue(v >= self.mean - 10*self.stdev)
     
     def tearDown(self):
         pass
@@ -63,8 +93,8 @@ class ImpulseSpec(unittest.TestCase):
         n = random.randint(100,750)
         series = self.case.time_series(n)
         
-        min = self.bias - 4*self.noise*self.amplitude
-        max = self.bias + 4*self.noise*self.amplitude + self.amplitude
+        min = self.bias - 10*self.noise*self.amplitude
+        max = self.bias + 10*self.noise*self.amplitude + self.amplitude
         
         self.assertEqual(n, len(series))
         for v in series:

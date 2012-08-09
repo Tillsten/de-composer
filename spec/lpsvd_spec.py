@@ -20,7 +20,7 @@ class LPSVD_Acceptance_Tests(unittest.TestCase):
 
 class LPSVD_Spec(unittest.TestCase):
     def setUp(self):
-        self.case = LPSVD(map(float, range(100)))
+        pass
     
     def test_polynomial_coefficients(self):
         pass
