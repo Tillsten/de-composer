@@ -77,7 +77,7 @@ class LPSVD:
     def half_components(self):
         """Yields decay coefficients and frequencies for components."""
         roots = self.half_component_roots()
-        froots = filter(lambda c: polar(c)[0] >= 1.0, roots)
+        froots = filter(lambda c: polar(c)[0] >= 0.95, roots)
         froots = filter(lambda c: c.imag >= 0, froots)
         decays = [np.log(polar(c)[0]) for c in froots]
         freqs = [polar(c)[1] / (2*pi) for c in froots]
@@ -135,7 +135,7 @@ class LPSVD:
     def _count_signals(self, values):
         """Naive singular value selection method. Actual selection should
            be done with counter objects. See counters.py for classes."""
-        nsignals = int(0.25 * len(values))
+        nsignals = int(0.5 * len(values))
         if nsignals % 2 == 1:
             nsignals += 1
         return nsignals
