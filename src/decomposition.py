@@ -58,7 +58,7 @@ class Decomposition():
         maker = r.Recomposer(filtered, self._bias)
         return maker.time_series(length)
     
-    def count_components(self):
+    def count(self):
         """Returns the number of components in the decomposition"""
         return len(self._components)
     

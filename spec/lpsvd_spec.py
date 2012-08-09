@@ -22,7 +22,7 @@ class LPSVD_Acceptance_Tests(unittest.TestCase):
     
     def test_LPSVD(self):
         decomp = self.case.decomposition()
-        self.assertEqual(len(self.specs), decomp.count_components())
+        self.assertEqual(len(self.specs), decomp.count())
         for exp,comp in zip(self.specs[0], decomp.make_summary()[1]):
             self.assertTrue(abs(exp - comp) <= 0.001)
         for exp,comp in zip(self.specs[1], decomp.make_summary()[0]):

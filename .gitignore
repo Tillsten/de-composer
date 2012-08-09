@@ -2,3 +2,5 @@
 data/*.data
 results/*.results
 *.pyc
+work/*
+plot/*

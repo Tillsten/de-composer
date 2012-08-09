@@ -91,8 +91,8 @@ class DecompositionSpec(unittest.TestCase):
             self.assertTrue(v <= sum(max_amps) + self.t_bias)
             self.assertTrue(v >= -1*sum(max_amps) + self.t_bias)
     
-    def test_components_count(self):
-        self.assertEqual(self.t_n, self.case.count_components())
+    def test_count(self):
+        self.assertEqual(self.t_n, self.case.count())
     
     def test_summary(self):
         summary = self.case.make_summary()
