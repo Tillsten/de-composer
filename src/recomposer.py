@@ -20,6 +20,7 @@ class Recomposer:
         self.bias = bias
     
     def time_series(self, length):
+        """Generates a time series of given length from the components."""
         if length <= 0:
             raise Exception("Time series lengths must be positive.")
         return self._make_time_series(length)

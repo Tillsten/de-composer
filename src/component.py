@@ -72,3 +72,6 @@ class Component():
         if freq != 0.0:
             p = 1.0 / freq
         return p
+
+if __name__ == "__main__":
+    print "This module defines a class for defining sinusoidal components."

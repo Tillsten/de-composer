@@ -33,7 +33,8 @@ class MultipleSpec(unittest.TestCase):
         self.assertTrue(len(series) == n)
         
         for v in series:
-            self.assertTrue(abs(v - self.test_bias) <= self.test_amp)
+            self.assertTrue(v <= self.test_amp + self.test_bias)
+            self.assertTrue(v >= -1*self.test_amp + self.test_bias)
     
     def tearDown(self):
         pass
@@ -52,7 +53,8 @@ class SingletonSpec(unittest.TestCase):
         self.assertTrue(len(series) == n)
         
         for v in series:
-            self.assertTrue(abs(v - self.test_bias) <= self.test_amp)
+            self.assertTrue(v <= self.test_amp + self.test_bias)
+            self.assertTrue(v >= -1*self.test_amp + self.test_bias)
     
     def tearDown(self):
         pass
