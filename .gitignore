@@ -1,7 +1,10 @@
 *~
+
 data/*.data
 results/*.results
+
 *.pyc
-work/*
-plot/*
+figures/*
+plot/template.py
+
 .DS_Store
