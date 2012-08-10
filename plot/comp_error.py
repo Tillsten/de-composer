@@ -14,8 +14,8 @@ import lpsvd as l
 import utility as u
 import signallers as s
 
-N_NOISES=20
-N_SIGNALS=25
+N_NOISES=25
+N_SIGNALS=10
 D_LENGTH=1000
 
 def do_plot(fft_data, lpsvd_data):
@@ -29,18 +29,20 @@ def do_plot(fft_data, lpsvd_data):
     lxs = [p[0] for p in lpsvd_data]
     lys = [p[1] for p in lpsvd_data]
     
-    plt.scatter(fxs,fys,c='b',s=30.0,edgecolor='none',label="fft errors")
     plt.scatter(lxs,lys,c='g',s=30.0,edgecolor='none',label="lpsvd errors")
+    plt.scatter(fxs,fys,c='b',s=30.0,edgecolor='none',label="fft errors")
     
     plt.title("comparative robustness to noise",color='b',fontsize=20.0)
     plt.xlabel("signal-to-noise ratio")
     plt.ylabel("norm. mean squared error")
     
+    ymin,ymax = plt.ylim()
+    plt.ylim(-0.001, ymax)
     plt.xlim(-0.05, 1.05)
     
     plt.gca().xaxis.tick_bottom()
     plt.gca().yaxis.tick_left()
-    plt.legend(loc=1)
+    plt.legend(loc=2)
     
     plt.savefig("comp_error")
 
@@ -75,10 +77,10 @@ def main():
             fft_data.append((nsr, fft_err))
             lpsvd_data.append((nsr, lpsvd_err))
     
-#    for fd in fft_data:
-#        print fd
-#    for ld in lpsvd_data:
-#        print ld
+    for fd in fft_data:
+        print str(fd[0])+"\t"+str(fd[1])
+    for ld in lpsvd_data:
+        print str(ld[0])+"\t"+str(ld[1])
     do_plot(fft_data, lpsvd_data)
     return None
 
