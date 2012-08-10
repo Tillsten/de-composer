@@ -4,6 +4,8 @@
 *.results
 
 *.pyc
+*.png
+
 figures/*
 plot/template.py
 
