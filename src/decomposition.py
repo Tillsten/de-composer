@@ -37,6 +37,8 @@ class Decomposition():
         return maker.time_series(length)
     
     def period_limit_time_series(self, length, period, use_smalls=False):
+        """Actually, much more useful than filtered time series option.
+           Enables to set period cap/floor on recomposition components."""
         filtered = self._components[:]
         if use_smalls:
             filtered = filter(lambda c: c.period <= period, filtered)
