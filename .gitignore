@@ -4,3 +4,4 @@ results/*.results
 *.pyc
 work/*
 plot/*
+.DS_Store
