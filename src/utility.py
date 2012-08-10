@@ -26,5 +26,10 @@ def deltas(target, actual):
     pairs = zip(target, actual)
     return [(a-t) for (t,a) in pairs]
 
+def errors(target, actual):
+    """Signed and normalized errors between target and actual series."""
+    pairs = zip(target, actual)
+    return [(a-t)/t for (t,a) in pairs if t != 0]
+
 if __name__ == "__main__":
     print "This module provides generic utilities."

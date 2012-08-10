@@ -54,5 +54,12 @@ class DeltasSpec(unittest.TestCase):
         ds = u.deltas(a,b)
         self.assertEqual(ds, [1,-3,1])
 
+class ErrorsSpec(unittest.TestCase):
+    def test_errors(self):
+        a = [2.0,2.0,2.0]
+        b = [1.0,3.0,1.5]
+        es = u.errors(a,b)
+        self.assertEquals(es, [-0.5,0.5,-0.25])
+
 if __name__ == "__main__":
     unittest.main()
