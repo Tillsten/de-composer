@@ -36,6 +36,16 @@ class Decomposition():
         maker = r.Recomposer(self._components, self.bias)
         return maker.time_series(length)
     
+    def period_limit_time_series(self, length, period, use_smalls=False):
+        filtered = self._components[:]
+        if use_smalls:
+            filtered = filter(lambda c: c.period <= period, filtered)
+        else:
+            filtered = filter(lambda c: c.period >= period, filtered)
+        
+        maker = r.Recomposer(filtered, self.bias)
+        return maker.time_series(length)
+    
     def filtered_time_series(self, length, n, should_reverse=False):
         """Generates a time series based on a subset of components,
            specified by a slice tuple. Assumed to be period sorted..."""

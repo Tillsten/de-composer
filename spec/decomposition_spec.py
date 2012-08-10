@@ -60,6 +60,34 @@ class DecompositionSpec(unittest.TestCase):
             self.assertTrue(v <= sum(self.t_amps) + self.t_bias)
             self.assertTrue(v >= -1*sum(self.t_amps) + self.t_bias)
 
+    def test_min_period_limit_time_series(self):
+        length = random.randint(100,750)
+        limiter = random.choice(self.specs)
+        min_per = 1.0 / limiter[2]
+        
+        series = self.case.period_limit_time_series(length, min_per)
+        filtered = filter(lambda s: 1./s[2] >= min_per, self.specs)
+        famps = [s[0] for s in filtered]
+        
+        self.assertEqual(len(series), length)
+        for v in series:
+            self.assertTrue(v <= sum(famps) + self.t_bias)
+            self.assertTrue(v >= -1*sum(famps) + self.t_bias)
+    
+    def test_max_period_limit_time_series(self):
+        length = random.randint(100,750)
+        limiter = random.choice(self.specs)
+        max_per = 1.0 / limiter[2]
+        
+        series = self.case.period_limit_time_series(length, max_per, True)
+        filtered = filter(lambda s: 1./s[2] <= max_per, self.specs)
+        famps = [s[0] for s in filtered]
+        
+        self.assertEqual(len(series), length)
+        for v in series:
+            self.assertTrue(v <= sum(famps) + self.t_bias)
+            self.assertTrue(v >= -1*sum(famps) + self.t_bias)
+    
     def test_filtered_time_series(self):
         length = random.randint(10,150)
         n = random.randint(1,self.t_n)
