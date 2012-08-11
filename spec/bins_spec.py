@@ -68,31 +68,6 @@ class TricubicKernelSpec(unittest.TestCase):
         for p in zip(ks, exs):
             self.assertEqual(p[0],p[1])
 
-class GaussianBinSpec(unittest.TestCase):
-    def setUp(self):
-        pass
-    
-    def test_spread(self):
-        sd = 2.0
-        intervallic = [0.0 for i in range(250)]
-        for i in range(0,250,20):
-            intervallic[i] = 10.0
-        binned = b.gs_bin(intervallic, sd)
-        for v in binned:
-            self.assertTrue(v > 0.0)
-    
-    def test_symmetry(self):
-        sd = 1.0
-        intervallic = [0.0 for i in range(50)]
-        for i in range(0,50,5):
-            intervallic[i] = 10.0
-        binned = b.gs_bin(intervallic, sd)
-        for v in binned:
-            self.assertTrue(v >= 0.0 and v <= 10.0)
-    
-    def tearDown(self):
-        pass
-
 class GaussianKernelSpec(unittest.TestCase):
     def test_kernel(self):
         sd = 1.0
