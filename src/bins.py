@@ -6,6 +6,8 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 from math import e,sqrt,pi
 
 def sbin(xs, sz):
+    """Moving sums of size sz, using strictly forward sums.
+       returned series will be shorter than the input series by sz."""
     if sz <= 0 or len(xs) < sz:
         raise Exception("not enough data to bin.")
     
@@ -17,20 +19,24 @@ def sbin(xs, sz):
     return bs
 
 def abin(xs, sz):
+    """Divides moving sums by N to yield arithmetic moving average."""
     bs = sbin(xs, sz)
     return map(lambda x: x / float(sz), bs)
 
 def gsbin(xs, sd):
+    """Gaussian kernel moving averages. See gs_kernel for definition."""
     fracs = [_fracture(xs,i,3*sd) for i in range(len(xs))]
     gs_fun = lambda d: gs_kernel(d, sd)
     return [_bin(f,gs_fun) for f in fracs]
 
 def tcbin(xs, w):
+    """Tricubic kernel moving averages. See tc_kernel for definition."""
     fracs = [_fracture(xs,i,w) for i in range(len(xs))]
     tc_fun = lambda d: tc_kernel(d, w)
     return [_bin(f,tc_fun) for f in fracs]
 
 def _bin(fractured, wt_fun):
+    """Generic binning procedure given an input weight function."""
     vals = [f[1] for f in fractured]
 
     dists = [f[0] for f in fractured]    
@@ -40,6 +46,7 @@ def _bin(fractured, wt_fun):
     return sum(kerneld) / sum(weights)
 
 def _fracture(xs, i, hsz):
+    """Useful for drawing sublists from parent list."""
     start = max(0, int(i-hsz))
     end = min(len(xs), int(i+hsz+1))
     vals = xs[start:end]
