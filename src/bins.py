@@ -20,6 +20,32 @@ def abin(xs, sz):
     bs = sbin(xs, sz)
     return map(lambda x: x / float(sz), bs)
 
+def gsbin(xs, sd):
+    fracs = [_fracture(xs,i,3*sd) for i in range(len(xs))]
+    gs_fun = lambda d: gs_kernel(d, sd)
+    return [_bin(f,gs_fun) for f in fracs]
+
+def tcbin(xs, w):
+    fracs = [_fracture(xs,i,w) for i in range(len(xs))]
+    tc_fun = lambda d: tc_kernel(d, w)
+    return [_bin(f,tc_fun) for f in fracs]
+
+def _bin(fractured, wt_fun):
+    vals = [f[1] for f in fractured]
+
+    dists = [f[0] for f in fractured]    
+    weights = [wt_fun(d) for d in dists]
+
+    kerneld = [v*w for (v,w) in zip(vals, weights)]
+    return sum(kerneld) / sum(weights)
+
+def _fracture(xs, i, hsz):
+    start = max(0, int(i-hsz))
+    end = min(len(xs), int(i+hsz+1))
+    vals = xs[start:end]
+    dists = [abs(j-i) for j in range(start,end)]
+    return zip(dists, vals)
+
 def tc_kernel(d, w):
     """Tricubic kernel defined by distance from centre and kernel width.
        \left( 1 - (\frac {x-x_o} {w})^3 \right)^3

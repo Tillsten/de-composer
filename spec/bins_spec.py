@@ -59,6 +59,39 @@ class ABinSpec(unittest.TestCase):
     def tearDown(self):
         pass
 
+class TCBinsSpec(unittest.TestCase):
+    def test_uniforms(self):
+        priors = [1.0 for i in range(50)]
+        posts = b.tcbin(priors, 1.0)
+        for p in posts:
+            self.assertEqual(p, 1.0)
+    
+    def test_distribution(self):
+        priors = [0.0 for i in range(7)]
+        priors[3] = 1.0
+        posts = b.tcbin(priors,3.0)
+        self.assertEqual(posts[0], 0.0)
+        self.assertEqual(posts[6], 0.0)
+        for p in posts[2:-1]:
+            self.assertTrue(0.0 < p < 0.3)
+
+class GSBinSpec(unittest.TestCase):
+    def test_uniforms(self):
+        priors = [1.0 for i in range(50)]
+        posts = b.gsbin(priors, 1.0)
+        for p in posts:
+            self.assertEqual(1.0, p)
+    
+    def test_distribution(self):
+        priors = [0.0 for i in range(7)]
+        priors[3] = 1.0
+        posts = b.gsbin(priors,1.0)
+        mn = 0.005
+        mx = 0.4
+        for p in posts:
+            self.assertTrue(mn <= p <= mx)
+        self.assertEqual(max(posts), posts[3])
+
 class TricubicKernelSpec(unittest.TestCase):
     def test_kernel(self):
         w = 3.0
