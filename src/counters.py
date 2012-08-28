@@ -19,8 +19,10 @@ class RelativeMassCounter(Counter):
         max_sv = max(values)
         cutoff = self.fraction * max_sv
         signals = filter(lambda v: v > cutoff, values)
-        return len(signals)
-
+        nsignals = len(signals)
+        if nsignals %2 == 1:
+            nsignals += 1
+        return nsignals
 
 class MassFractionCounter(Counter):
     """Accepts a simple mass fraction of the singular values."""

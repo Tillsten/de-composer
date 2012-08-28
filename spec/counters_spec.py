@@ -22,9 +22,15 @@ class RelativeMassCounterSpec(unittest.TestCase):
         test_series = range(n)
         
         self.counter.fraction = 0.25
-        self.assertEqual(self.counter.count_signals(test_series), 3*n/4)
+        expected = 3 * n / 4
+        if expected % 2 == 1:
+            expected += 1
+        self.assertEqual(self.counter.count_signals(test_series), expected)
         
         self.counter.fraction = 0.5
+        expected = n / 2
+        if expected % 2 == 1:
+            expected += 1
         self.assertEqual(self.counter.count_signals(test_series), n/2)
         
         random.shuffle(test_series)
