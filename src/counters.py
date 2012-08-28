@@ -22,7 +22,7 @@ class RelativeMassCounter(Counter):
         nsignals = len(signals)
         if nsignals % 2 == 1:
             nsignals += 1
-        return nsignals
+        return min(nsignals, len(values))
 
 class MassFractionCounter(Counter):
     """Accepts a simple mass fraction of the singular values."""
@@ -41,7 +41,7 @@ class MassFractionCounter(Counter):
                 break
         if nsignals % 2 == 1:
             nsignals += 1
-        return nsignals
+        return min(nsignals, len(values))
 
 if __name__ == "__main__":
     print "This is a module for defining Singular Value counters."

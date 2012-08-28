@@ -8,7 +8,7 @@ import numpy as np
 from numpy.linalg import lstsq, norm
 from scipy.linalg import svd, hankel
 
-from math import exp, sin, cos, atan2
+from math import exp, sin, cos, atan2, isnan
 from cmath import polar, pi
 
 import decomposition as d
@@ -114,6 +114,8 @@ class LPSVD:
     def bias_filter(self, data, count):
         """Subtract arithmetic mean of noise-related singular values from
            the singular value vector. Bias correction procedure."""
+        if count >= len(data):
+            return data
         signals = data[:count]
         remains = data[count:]
         bias = np.average(remains)
