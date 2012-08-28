@@ -9,6 +9,19 @@ class Counter():
        for identifying signal vs. noise singular values."""
     pass
 
+class RelativeMassCounter(Counter):
+    """Accepts singular values up to a certain mass of maximal SV."""
+    def __init__(self, fraction):
+        """Initializes with a fractional value that determines SV cutoff."""
+        self.fraction = fraction
+    
+    def count_signals(self, values):
+        max_sv = max(values)
+        cutoff = self.fraction * max_sv
+        signals = filter(lambda v: v > cutoff, values)
+        return len(signals)
+
+
 class MassFractionCounter(Counter):
     """Accepts a simple mass fraction of the singular values."""
     def __init__(self, fraction):

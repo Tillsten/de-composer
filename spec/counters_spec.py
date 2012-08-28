@@ -13,6 +13,26 @@ import random
 from math import ceil
 import counters as c
 
+class RelativeMassCounterSpec(unittest.TestCase):
+    def setUp(self):
+        self.counter = c.RelativeMassCounter(0.5)
+    
+    def test_count_signals(self):
+        n = random.randint(4,100)
+        test_series = range(n)
+        
+        self.counter.fraction = 0.25
+        self.assertEqual(self.counter.count_signals(test_series), 3*n/4)
+        
+        self.counter.fraction = 0.5
+        self.assertEqual(self.counter.count_signals(test_series), n/2)
+        
+        random.shuffle(test_series)
+        self.assertEqual(self.counter.count_signals(test_series), n/2)
+        
+    def tearDown(self):
+        pass
+
 class MassFractionCounterSpec(unittest.TestCase):
     def setUp(self):
         self.fraction = frac = random.random()
