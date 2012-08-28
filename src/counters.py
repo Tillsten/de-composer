@@ -20,7 +20,7 @@ class RelativeMassCounter(Counter):
         cutoff = self.fraction * max_sv
         signals = filter(lambda v: v > cutoff, values)
         nsignals = len(signals)
-        if nsignals %2 == 1:
+        if nsignals % 2 == 1:
             nsignals += 1
         return nsignals
 

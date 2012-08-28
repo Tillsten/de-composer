@@ -11,7 +11,7 @@ del p, q # keep globals clean
 import unittest
 import random
 import signallers as s
-import lpsvd as l
+import py_lpsvd as l
 
 class LPSVD_Acceptance_Tests(unittest.TestCase):
     def setUp(self):
