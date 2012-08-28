@@ -34,7 +34,7 @@ class RelativeMassCounterSpec(unittest.TestCase):
         self.assertEqual(self.counter.count_signals(test_series), expected)
         
         random.shuffle(test_series)
-        self.assertEqual(self.counter.count_signals(test_series), n/2)
+        self.assertEqual(self.counter.count_signals(test_series), expected)
         
     def tearDown(self):
         pass
