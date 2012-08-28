@@ -31,7 +31,7 @@ class RelativeMassCounterSpec(unittest.TestCase):
         expected = n / 2
         if expected % 2 == 1:
             expected += 1
-        self.assertEqual(self.counter.count_signals(test_series), n/2)
+        self.assertEqual(self.counter.count_signals(test_series), expected)
         
         random.shuffle(test_series)
         self.assertEqual(self.counter.count_signals(test_series), n/2)
