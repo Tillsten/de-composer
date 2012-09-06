@@ -3,7 +3,7 @@
 import sys
 import os.path
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-from math import e,sqrt,pi
+from math import e,sqrt,pi,log
 
 def sbin(xs, sz):
     """Moving sums of size sz, using strictly forward sums.
@@ -29,11 +29,21 @@ def gsbin(xs, sd):
     gs_fun = lambda d: gs_kernel(d, sd)
     return [_bin(f,gs_fun) for f in fracs]
 
+def gs_width(full):
+    num = full / 2.
+    den = sqrt(log(4))
+    return num / den
+
 def tcbin(xs, w):
     """Tricubic kernel moving averages. See tc_kernel for definition."""
     fracs = [_fracture(xs,i,w) for i in range(len(xs))]
     tc_fun = lambda d: tc_kernel(d, w)
     return [_bin(f,tc_fun) for f in fracs]
+
+def tc_width(full):
+    num = 0.5 * full
+    den = (1 - (0.5 ** (1./3.))) ** (1./3.)
+    return num / den
 
 def _bin(fractured, wt_fun):
     """Generic binning procedure given an input weight function."""
@@ -68,7 +78,8 @@ def gs_kernel(d, sd):
     sd = float(sd)
     d = float(d)
     
-    a = 1./(sd * sqrt(2*pi))
+    # a = 1./(sd * sqrt(2*pi))
+    a = 1.0
     b = -0.5 * (d / sd)**2
     return a * e**(b)
 

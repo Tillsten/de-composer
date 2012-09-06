@@ -75,6 +75,15 @@ class TCBinsSpec(unittest.TestCase):
         for p in posts[2:-1]:
             self.assertTrue(0.0 < p < 0.3)
 
+class TCWidthSpec(unittest.TestCase):
+    def test_zero(self):
+        self.assertEqual(b.tc_width(0), 0)
+    
+    def test_computed(self):
+        argued = 2.0
+        expected = 1.6924
+        self.assertTrue(abs(b.tc_width(argued) - expected) <= 0.001)
+
 class GSBinSpec(unittest.TestCase):
     def test_uniforms(self):
         priors = [1.0 for i in range(50)]
@@ -92,6 +101,16 @@ class GSBinSpec(unittest.TestCase):
             self.assertTrue(mn <= p <= mx)
         self.assertEqual(max(posts), posts[3])
 
+
+class GSWidthSpec(unittest.TestCase):
+    def test_zero(self):
+        self.assertEqual(b.gs_width(0), 0)
+    
+    def test_computed(self):
+        argued = 2.0
+        expected = 0.8493
+        self.assertTrue(abs(b.gs_width(argued) - expected) < 0.01)
+
 class TricubicKernelSpec(unittest.TestCase):
     def test_kernel(self):
         w = 3.0
@@ -106,8 +125,8 @@ class GaussianKernelSpec(unittest.TestCase):
         sd = 1.0
         ds = [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
         exs = [.0044, .05340, .2419, .3989, .2419, .0540, .0044]
+        exs = [ex * 2.50663 for ex in exs]
         ks = [b.gs_kernel(d, sd) for d in ds]
-        self.assertTrue(abs(sum(ks) - 1.0) <= 0.01)
         for p in zip(ks, exs):
             self.assertTrue(abs(p[0]-p[1])/p[1] <= 0.05)
 
