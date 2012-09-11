@@ -15,8 +15,8 @@ import py_lpsvd as l
 
 class LPSVD_Acceptance_Tests(unittest.TestCase):
     def setUp(self):
-       self.specs = specs = [(5.0, 0.35, 1.0/45.0, 3.0),
-                             (10.0, 0.05, 1.0/20.0, 12.0)]
+       self.specs = specs = [(5.0, 0.0, 1.0/45.0, 3.0),
+                             (10.0, 0.0, 1.0/20.0, 12.0)]
        self.series = data = s.Periodic(specs, noise=0.0).time_series(100)
        self.case = l.LPSVD(data, count=4.0)
     

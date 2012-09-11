@@ -8,7 +8,7 @@ import numpy as np
 from numpy.linalg import lstsq, norm
 from scipy.linalg import svd, hankel
 
-from math import exp, sin, cos, atan2, isnan
+from math import exp, sin, cos, atan2
 from cmath import polar, pi
 
 import decomposition as d
@@ -46,8 +46,20 @@ class LPSVD:
         
         bias = v[-1] # Here the bias appears following linear fitting step.
         pairs = [(v[2*i], v[2*i+1]) for i in range(len(v)/2)]
-        amps = [norm(p) for p in pairs]
+        # amps = [norm(p) for p in pairs]
         phases = [atan2(p[0],p[1]) for p in pairs]
+
+        # HACK: These huge ones come from arithmetic errors in LLS fitting 0.0
+        amps = []
+        for p in pairs:
+            if abs(p[0]) >= 1.0e4 and abs(p[1]) >= 1.0e4:
+                amps.append(0)
+            elif abs(p[0]) >= 1.0e5:
+                amps.append(p[1])
+            elif abs(p[1]) >= 1.0e5:
+                amps.append(p[0])
+            else:
+                amps.append(norm(p))
         
         return zip(amps, phases), bias
     
@@ -77,7 +89,7 @@ class LPSVD:
     def half_components(self):
         """Yields decay coefficients and frequencies for components."""
         roots = self.half_component_roots()
-        froots = filter(lambda c: polar(c)[0] >= 1.0, roots)
+        froots = filter(lambda c: abs(abs(c) - 1.0) <= 0.015, roots)
         froots = filter(lambda c: c.imag >= 0, froots)
         decays = [np.log(polar(c)[0]) for c in froots]
         freqs = [polar(c)[1] / (2*pi) for c in froots]
