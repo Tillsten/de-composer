@@ -81,15 +81,16 @@ class LPSVD:
                 row.append(exp(-1*d*t)*sin(f*2*pi*t))
                 row.append(exp(-1*d*t)*cos(f*2*pi*t))
             else:
-                row.append(1) # bias
+                row.append(1.0) # bias
         A = np.array([r[1] for r in trows])
-        v = lstsq(A,b)[0]
+        v = lstsq(A,b,rcond=0.05)[0]
         return v
     
     def half_components(self):
         """Yields decay coefficients and frequencies for components."""
         roots = self.half_component_roots()
-        froots = filter(lambda c: abs(abs(c) - 1.0) <= 0.015, roots)
+#        froots = filter(lambda c: abs(abs(c) - 1.0) <= 0.015, roots)
+        froots = filter(lambda c: abs(c) >= 0.99, roots)
         froots = filter(lambda c: c.imag >= 0, froots)
         decays = [np.log(polar(c)[0]) for c in froots]
         freqs = [polar(c)[1] / (2*pi) for c in froots]
