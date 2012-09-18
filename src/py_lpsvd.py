@@ -17,11 +17,12 @@ class LPSVD:
     """Encapsulates the logic needed to perform Linear-Prediction Singular
        Value Decomposition procedure on input time-series data..."""
     
-    def __init__(self, data, count=None, counter=None):
+    def __init__(self, data, count=None, counter=None, filterf=None):
         """Initializes with array-like time-series argument data."""
         self.data = np.array(data)
         self.count = count
         self.counter = counter
+        self.filterf = filterf
         self.svd = None
     
     def decomposition(self):
@@ -89,8 +90,13 @@ class LPSVD:
     def half_components(self):
         """Yields decay coefficients and frequencies for components."""
         roots = self.half_component_roots()
-#        froots = filter(lambda c: abs(abs(c) - 1.0) <= 0.015, roots)
-        froots = filter(lambda c: abs(c) >= 0.99, roots)
+        
+        filterf = self.filterf
+        if filterf == None:
+            # by default, filter to outside unit circle
+            filterf = lambda c: abs(c) >= 1.0
+        
+        froots = filter(filterf, roots)
         froots = filter(lambda c: c.imag >= 0, froots)
         decays = [np.log(polar(c)[0]) for c in froots]
         freqs = [polar(c)[1] / (2*pi) for c in froots]
