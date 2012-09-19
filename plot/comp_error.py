@@ -9,35 +9,45 @@ sys.path.append(os.path.join(q[0], "src"))
 del p, q # keep globals clean
 
 import matplotlib.pyplot as plt
-from numpy import fft, linspace
-import lpsvd as l
+from numpy import fft, linspace, average, sqrt
+import py_lpsvd as l
 import utility as u
 import signallers as s
+from scipy.stats import sem
 
 N_NOISES=25
-N_SIGNALS=10
-D_LENGTH=1000
+N_SIGNALS=25
+D_LENGTH=750
 
 def do_plot(fft_data, lpsvd_data):
     plt.figure(1)
 #    plt.gcf().set_size_inches(2*plt.gcf().get_figwidth(),
 #                              2*plt.gcf().get_figheight())
+    plt.subplots_adjust(left=0.125,right=0.95,top=0.95)
+
+    fxs = sorted(list(set([p[0] for p in fft_data])))
+    fbs = map(lambda x: [p[1] for p in fft_data if p[0] == x],
+              fxs)
+    fys = [average(b) for b in fbs]
+    fes = [2*sem(b) for b in fbs]
     
-    fxs = [p[0] for p in fft_data]
-    fys = [p[1] for p in fft_data]
+    lxs = sorted(list(set([p[0] for p in lpsvd_data])))
+    lbs = map(lambda x: [p[1] for p in lpsvd_data if p[0] == x],
+              lxs)
+    lys = [average(b) for b in lbs]
+    les = [2*sem(b) for b in lbs]
     
-    lxs = [p[0] for p in lpsvd_data]
-    lys = [p[1] for p in lpsvd_data]
+    plt.errorbar(lxs,lys,yerr=les,
+                 c='g',label="lpsvd errors")
+    plt.errorbar(fxs,fys,yerr=fes,
+                 c='b',label="fft errors")
     
-    plt.scatter(lxs,lys,c='g',s=30.0,edgecolor='none',label="lpsvd errors")
-    plt.scatter(fxs,fys,c='b',s=30.0,edgecolor='none',label="fft errors")
-    
-    plt.title("comparative robustness to noise",color='b',fontsize=20.0)
+#    plt.title("comparative robustness to noise",color='b',fontsize=20.0)
     plt.xlabel("signal-to-noise ratio")
     plt.ylabel("norm. mean squared error")
     
     ymin,ymax = plt.ylim()
-    plt.ylim(-0.001, ymax)
+    plt.ylim(-0.05, ymax)
     plt.xlim(-0.05, 1.05)
     
     plt.gca().xaxis.tick_bottom()
@@ -57,7 +67,10 @@ def main():
     noises = linspace(0.0, 1.0, N_NOISES)
     for nsr in noises:
         for spec,maker in zip(specs,makers):
-            amp = spec[0][0] # use this to normalize errors.
+            maker.noise = 0.0
+            amp = 2.0 * (
+                average([m**2 for m in maker.time_series(D_LENGTH)])
+                )
             
             maker.noise = nsr
             seed = maker.time_series(D_LENGTH)
@@ -71,8 +84,8 @@ def main():
             maker.noise = 0.0
             clean = maker.time_series(D_LENGTH)
             
-            fft_err = u.mean_sq_error(clean,fft_r) / (amp**2)
-            lpsvd_err = u.mean_sq_error(clean,lpsvd_r) / (amp**2)
+            fft_err = 1.0 * (u.mean_sq_error(clean,fft_r)) / amp
+            lpsvd_err = 1.0 * (u.mean_sq_error(clean,lpsvd_r)) / amp
             
             fft_data.append((nsr, fft_err))
             lpsvd_data.append((nsr, lpsvd_err))
