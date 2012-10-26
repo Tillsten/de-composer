@@ -92,18 +92,21 @@ class JTK_Function_Spec(unittest.TestCase):
         off = self.test_off
         
         p_on = self.positive_case.run_series(per, off)[1]
-        p_under = self.positive_case.run_series(per, under)[1]
-        p_over = self.positive_case.run_series(per, over)[1]
+        p_under = self.positive_case.run_series(under, off)[1]
+        p_over = self.positive_case.run_series(over, off)[1]
         
-        self.assertTrue(p_on < p_under)
-        self.assertTrue(p_on < p_over)
+        self.assertTrue(p_on <= p_under)
+        self.assertTrue(p_on <= p_over)
     
     def test_relative_offset(self):
         """It should score correctly based on relative offset fit."""
         per = self.test_per
         off = self.test_off
-        shorter = random.randint(0,off)
-        longer = random.randint(off+1,per)
+        # shorter = random.randint(0,off)
+        # longer = random.randint(off+1,per)
+
+        shorter = off - per/3
+        longer = off + per/3
         
         p_on = self.positive_case.run_series(per,off)[1]
         p_shorter = self.positive_case.run_series(per,shorter)[1]

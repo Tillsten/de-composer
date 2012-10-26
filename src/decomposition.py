@@ -29,7 +29,7 @@ class Decomposition():
         self.decays = [comp.decay for comp in self._components]
         self.periods = [comp.period for comp in self._components]
         self.phases = [comp.phase for comp in self._components]
-        self.offsets = [comp.phase for comp in self._components]
+        self.offsets = [comp.offset for comp in self._components]
     
     def time_series(self, length):
         """Builds a recomposed time series based on all components."""
